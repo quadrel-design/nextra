@@ -185,18 +185,19 @@ export const Search: FC<SearchProps> = ({
     }
   }, [])
 
-  const icon = mounted && !focused && (
+  const icon = (
     <kbd
       className={cn(
-        'x:absolute x:my-1.5 x:select-none x:end-1.5',
+        'x:absolute x:my-1.5 x:select-none x:pointer-events-none x:end-1.5 x:transition-all',
         'x:h-5 x:rounded x:bg-nextra-bg x:px-1.5 x:font-mono x:text-[11px] x:font-medium x:text-gray-500',
         'x:border nextra-border',
         'x:contrast-more:text-current',
         'x:items-center x:gap-1 x:flex',
-        'x:max-sm:hidden not-prose'
+        'x:max-sm:hidden not-prose',
+        !(mounted && !focused) && 'x:invisible x:opacity-0'
       )}
     >
-      {navigator.userAgent.includes('Mac') ? (
+      {mounted && navigator.userAgent.includes('Mac') ? (
         <>
           <span className="x:text-xs">⌘</span>K
         </>
@@ -249,7 +250,7 @@ export const Search: FC<SearchProps> = ({
           spellCheck={false}
           className={({ focus }) =>
             cn(
-              'x:rounded-lg x:px-3 x:py-2 x:transition-colors',
+              'x:rounded-lg x:px-3 x:py-2 x:transition-all',
               'x:w-full x:md:w-64',
               'x:text-base x:leading-tight x:md:text-sm',
               focus
@@ -273,7 +274,7 @@ export const Search: FC<SearchProps> = ({
       <ComboboxOptions
         transition
         anchor={{ to: 'top end', gap: 10, padding: 16 }}
-        className={({ open }) =>
+        className={() =>
           cn(
             'nextra-search-results', // for user styling
             'nextra-scrollbar x:max-md:h-full',
@@ -281,8 +282,8 @@ export const Search: FC<SearchProps> = ({
             'x:z-30 x:rounded-xl x:py-2.5 x:shadow-xl',
             'x:contrast-more:border x:contrast-more:border-gray-900 x:contrast-more:dark:border-gray-50',
             'x:backdrop-blur-md x:bg-nextra-bg/70',
-            'x:motion-reduce:transition-none x:transition-opacity',
-            open ? 'x:opacity-100' : 'x:opacity-0',
+            'x:motion-reduce:transition-none',
+            'x:origin-top x:transition x:duration-200 x:ease-out x:empty:invisible x:data-[closed]:scale-95 x:data-[closed]:opacity-0',
             error || isLoading || !results.length
               ? [
                   'x:md:min-h-28 x:grow x:flex x:justify-center x:text-sm x:gap-2 x:px-8',
@@ -292,8 +293,7 @@ export const Search: FC<SearchProps> = ({
                 ]
               : // headlessui adds max-height as style, use !important to override
                 'x:md:max-h-[min(calc(100vh-5rem),400px)]!',
-            'x:w-full x:md:w-[576px]',
-            'x:empty:invisible'
+            'x:w-full x:md:w-[576px]'
           )
         }
       >
