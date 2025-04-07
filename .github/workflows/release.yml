@@ -45,6 +45,13 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          enable_jekyll: false
+
       - name: Type Check
         run: pnpm types:check
 
@@ -52,7 +59,7 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: pnpm release
-          version: pnpm run version # should be `pnpm run`
+          version: pnpm run version # should be `pnpm run version`
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
