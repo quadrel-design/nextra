@@ -5,6 +5,7 @@
   "scripts": {
     "build": "turbo run build --filter=./packages/\\*",
     "build:all": "turbo run build",
+    "export": "next build && touch out/.nojekyll",
     "clean": "rm -rf .turbo && pnpm -r exec sh -c 'rm -rf dist .next .turbo'",
     "dev": "turbo run dev --filter=./packages/\\*",
     "dev:theme-blog": "turbo run dev --filter=example-blog... --filter=!docs",
