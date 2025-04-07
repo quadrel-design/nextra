@@ -9,6 +9,7 @@ import type {
   BaseTypeTableProps,
   GeneratedFunction,
   GeneratedType,
+  ReturnField,
   Tags,
   TypeField
 } from './types.js'
@@ -63,8 +64,8 @@ export function generateDocumentation({
     const tags = getTags(declarationType.getSymbolOrThrow())
     return {
       name: declarationType.getSymbolOrThrow().getName(),
-      description,
-      tags,
+      ...(description && { description }),
+      ...(Object.keys(tags).length && { tags }),
       signatures: callSignatures.map(signature => {
         const params = signature.getParameters()
         const typeParams = params.flatMap(param =>
@@ -78,14 +79,32 @@ export function generateDocumentation({
         const returnType = signature.getReturnType()
         const returnsDescription =
           tags.returns && replaceJsDocLinks(tags.returns)
+
+        const flattenedReturnType: ReturnField[] =
+          flattened && isObjectType(returnType)
+            ? returnType.getProperties().flatMap(childProp =>
+                getDocEntry({
+                  symbol: childProp,
+                  declaration,
+                  flattened
+                })
+              )
+            : []
+
+        if (flattenedReturnType.length) {
+          if (returnsDescription) {
+            flattenedReturnType.unshift({ description: returnsDescription })
+          }
+        } else {
+          flattenedReturnType.push({
+            ...(returnsDescription && { description: returnsDescription }),
+            type: getFormattedText(returnType)
+          })
+        }
+
         return {
           params: typeParams,
-          returns: [
-            {
-              ...(returnsDescription && { description: returnsDescription }),
-              type: getFormattedText(returnType)
-            }
-          ]
+          returns: flattenedReturnType
         }
       })
     }
@@ -142,20 +161,8 @@ function getDocEntry({
   const subType = isFunctionParameter
     ? originalSubType.getNonNullableType()
     : originalSubType
-
   const typeOf = getDeclaration(symbol).getType()
-
-  if (
-    flattened &&
-    subType.isObject() &&
-    !subType.isArray() &&
-    !subType.isTuple() &&
-    !isSetType(subType) &&
-    !isMapType(subType) &&
-    // Is not function
-    !subType.getCallSignatures().length &&
-    !typeOf.isUnknown()
-  ) {
+  if (flattened && isObjectType(subType, typeOf)) {
     return subType.getProperties().flatMap(childProp => {
       const prefix = isFunctionParameter
         ? symbol.getName().replace(/^_+/, '')
@@ -204,19 +211,32 @@ function getDocEntry({
   }
 }
 
-function isSetType(type: Type): boolean {
-  const baseName = type.getSymbol()?.getName()
-
-  // Handles: Set<T>, ReadonlySet<T>
-  return baseName === 'Set' || baseName === 'ReadonlySet'
+function isObjectType(t: Type, typeOf?: Type): boolean {
+  if (typeOf === undefined) {
+    const symbol = t.getSymbol()
+    if (symbol) {
+      typeOf = getDeclaration(symbol).getType()
+    }
+  }
+  const baseName = t.getSymbol()?.getName()
+  return (
+    t.isObject() &&
+    !t.isArray() &&
+    !t.isTuple() &&
+    (!baseName || !IGNORED_TYPES.has(baseName)) &&
+    // Is not function
+    !t.getCallSignatures().length &&
+    !typeOf?.isUnknown()
+  )
 }
 
-function isMapType(type: Type): boolean {
-  const baseName = type.getSymbol()?.getName()
-
-  // Handles: Map<T>, ReadonlyMap<T>
-  return baseName === 'Map' || baseName === 'ReadonlyMap'
-}
+const IGNORED_TYPES = new Set([
+  'Set',
+  'ReadonlySet',
+  'Map',
+  'ReadonlyMap',
+  'ReactElement'
+])
 
 function getDeclaration(s: TsSymbol): Node {
   const parameterName = s.getName()

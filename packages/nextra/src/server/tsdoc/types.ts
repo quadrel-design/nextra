@@ -9,23 +9,25 @@ export type GeneratedType = {
 
 export type Tags = Record<string, string>
 
+export type ReturnField = {
+  /** Function return description. */
+  description?: string
+  /** Function return type. */
+  type?: string
+}
+
 export type GeneratedFunction = {
   /** Function name. */
   name: string
   /** Function description. */
-  description: string
+  description?: string
   /** Function tags. */
-  tags: Tags
+  tags?: Tags
   signatures: {
     /** Function parameters. */
     params: TypeField[]
     /** Function return. */
-    returns: {
-      /** Function return description. */
-      description?: string
-      /** Function return type. */
-      type: string
-    }[]
+    returns: ReturnField[]
   }[]
 }
 

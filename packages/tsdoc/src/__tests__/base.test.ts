@@ -703,6 +703,217 @@ export default Connection`
   })
 
   describe('functions', () => {
+    it('should flatten return type for useThemeConfig', () => {
+      const code =
+        'export { useThemeConfig as default } from "nextra-theme-docs"'
+      const result = generateDocumentation({ code, flattened: true })
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "name": "__type",
+          "signatures": [
+            {
+              "params": [],
+              "returns": [
+                {
+                  "name": "search",
+                  "type": "string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ReactPortal | Iterable<ReactNode> | Promise<...> | null",
+                },
+                {
+                  "name": "darkMode",
+                  "type": "boolean",
+                },
+                {
+                  "name": "docsRepositoryBase",
+                  "type": "string",
+                },
+                {
+                  "name": "editLink",
+                  "type": "string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ReactPortal | Iterable<ReactNode> | Promise<...> | null",
+                },
+                {
+                  "name": "feedback.content",
+                  "type": "string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ReactPortal | Iterable<ReactNode> | Promise<...> | null",
+                },
+                {
+                  "name": "feedback.labels",
+                  "type": "string",
+                },
+                {
+                  "name": "i18n",
+                  "type": "{ name: string; locale: string; }[]",
+                },
+                {
+                  "name": "lastUpdated",
+                  "type": "ReactElement<Record<string, unknown>, string | JSXElementConstructor<any>>",
+                },
+                {
+                  "name": "navigation.next",
+                  "type": "boolean",
+                },
+                {
+                  "name": "navigation.prev",
+                  "type": "boolean",
+                },
+                {
+                  "name": "sidebar.defaultMenuCollapseLevel",
+                  "type": "number",
+                },
+                {
+                  "name": "sidebar.defaultOpen",
+                  "type": "boolean",
+                },
+                {
+                  "name": "sidebar.toggleButton",
+                  "type": "boolean",
+                },
+                {
+                  "name": "sidebar.autoCollapse",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "themeSwitch.dark",
+                  "type": "string",
+                },
+                {
+                  "name": "themeSwitch.light",
+                  "type": "string",
+                },
+                {
+                  "name": "themeSwitch.system",
+                  "type": "string",
+                },
+                {
+                  "name": "toc.float",
+                  "type": "boolean",
+                },
+                {
+                  "name": "toc.backToTop",
+                  "type": "string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ReactPortal | Iterable<ReactNode> | Promise<...> | null",
+                },
+                {
+                  "name": "toc.title",
+                  "type": "string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | ReactPortal | Iterable<ReactNode> | Promise<...> | null",
+                },
+                {
+                  "name": "toc.extraContent",
+                  "optional": true,
+                  "type": "ReactNode",
+                },
+                {
+                  "name": "children",
+                  "optional": true,
+                  "type": "ReactNode",
+                },
+              ],
+            },
+          ],
+        }
+      `)
+    })
+
+    it('should flatten return type for useConfig', () => {
+      const code = 'export { useConfig as default } from "nextra-theme-docs"'
+      const result = generateDocumentation({ code, flattened: true })
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "name": "useConfig",
+          "signatures": [
+            {
+              "params": [],
+              "returns": [
+                {
+                  "name": "normalizePagesResult.activeType",
+                  "optional": true,
+                  "type": ""doc" | "page" | "menu"",
+                },
+                {
+                  "name": "normalizePagesResult.activeIndex",
+                  "type": "number",
+                },
+                {
+                  "name": "activeThemeContext.pagination",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.breadcrumb",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.collapsed",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.footer",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.layout",
+                  "optional": true,
+                  "type": ""default" | "full" | undefined",
+                },
+                {
+                  "name": "activeThemeContext.navbar",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.sidebar",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.timestamp",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.toc",
+                  "optional": true,
+                  "type": "boolean | undefined",
+                },
+                {
+                  "name": "activeThemeContext.typesetting",
+                  "optional": true,
+                  "type": ""default" | "article" | undefined",
+                },
+                {
+                  "name": "normalizePagesResult.activePath",
+                  "type": "Item[]",
+                },
+                {
+                  "name": "normalizePagesResult.directories",
+                  "type": "Item[]",
+                },
+                {
+                  "name": "normalizePagesResult.docsDirectories",
+                  "type": "((MdxFile | { name: string; route: string; }) & { title: string; type: string; children: any[]; firstChildRoute?: string; isUnderCurrentDocsTree?: boolean; })[]",
+                },
+                {
+                  "name": "normalizePagesResult.flatDocsDirectories",
+                  "type": "((MdxFile | { name: string; route: string; }) & { title: string; type: string; children: any[]; firstChildRoute?: string; isUnderCurrentDocsTree?: boolean; })[]",
+                },
+                {
+                  "name": "normalizePagesResult.topLevelNavbarItems",
+                  "type": "(PageItem | MenuItem)[]",
+                },
+                {
+                  "description": "Whether the sidebar is shown. If \`false\`, the theme and locale switchers are displayed in the
+        \`<Footer>\`.",
+                  "name": "hideSidebar",
+                  "type": "boolean",
+                },
+              ],
+            },
+          ],
+        }
+      `)
+    })
+
     it('should be parsed in object field', () => {
       const code = `type $ = {
   useNodeConnections: typeof import('@xyflow/react').useNodeConnections
@@ -953,7 +1164,6 @@ export default $
       const result = generateDocumentation({ code, flattened: true })
       expect(result).toMatchInlineSnapshot(`
         {
-          "description": "",
           "name": "foo",
           "signatures": [
             {
@@ -980,7 +1190,6 @@ export default $
               ],
             },
           ],
-          "tags": {},
         }
       `)
     })
@@ -996,7 +1205,6 @@ export default foo`
       const result = generateDocumentation({ code, flattened: true })
       expect(result).toMatchInlineSnapshot(`
         {
-          "description": "",
           "name": "__type",
           "signatures": [
             {
@@ -1024,7 +1232,6 @@ export default foo`
               ],
             },
           ],
-          "tags": {},
         }
       `)
     })
@@ -1189,7 +1396,6 @@ export default foo`
     const result = generateDocumentation({ code, flattened: true })
     expect(result).toMatchInlineSnapshot(`
       {
-        "description": "",
         "name": "foo",
         "signatures": [
           {
@@ -1207,7 +1413,6 @@ export default foo`
             ],
           },
         ],
-        "tags": {},
       }
     `)
   })

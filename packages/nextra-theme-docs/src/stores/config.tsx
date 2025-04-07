@@ -18,6 +18,10 @@ export function useConfig() {
   const { activeThemeContext, activeType } = normalizePagesResult
   return {
     normalizePagesResult,
+    /**
+     * Whether the sidebar is shown. If `false`, the theme and locale switchers are displayed in the
+     * `<Footer>`.
+     */
     hideSidebar: !activeThemeContext.sidebar || activeType === 'page'
   }
 }
